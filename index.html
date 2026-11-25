@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus Lab · 趣味交互实验室</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- 顶部导航栏 -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-logo">⚡</span>
+        <div>
+          <h1>Nexus Lab</h1>
+          <p class="subtitle">纯原生前端驱动的趣味交互实验室</p>
+        </div>
+      </div>
+      <nav class="nav-tabs" aria-label="功能模块切换">
+        <button class="nav-btn active" data-tab="particles">🌌 引力粒子</button>
+        <button class="nav-btn" data-tab="synth">🎹 赛博合成器</button>
+        <button class="nav-btn" data-tab="pathfinding">🧠 寻路可视化</button>
+        <button class="nav-btn" data-tab="wheel">🎡 决策大转盘</button>
+      </nav>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 模块 1：引力粒子画板 -->
+      <section id="tab-particles" class="tab-panel active">
+        <div class="panel-header">
+          <div>
+            <h2>🌌 引力粒子画板</h2>
+            <p class="hint">在画布上移动或点击鼠标，体验不同物理力场下的粒子动态效果。</p>
+          </div>
+          <div class="controls-row">
+            <label class="control-item">
+              力场模式
+              <select id="particle-mode">
+                <option value="attract">🧲 引力吸引</option>
+                <option value="repel">💥 斥力推开</option>
+                <option value="orbit">🪐 轨道环绕</option>
+                <option value="firework">🎆 点击烟花</option>
+              </select>
+            </label>
+            <label class="control-item">
+              拖尾长度
+              <input type="range" id="particle-trail" min="0.04" max="0.35" step="0.01" value="0.12" />
+            </label>
+            <button id="btn-burst" class="btn secondary">✨ 随机爆发</button>
+            <button id="btn-clear-particles" class="btn secondary">🧹 清空</button>
+            <button id="btn-save-art" class="btn primary">📸 保存画作</button>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="particle-canvas"></canvas>
+          <div class="canvas-badge">当前粒子数：<span id="particle-count">0</span></div>
+        </div>
+      </section>
+
+      <!-- 模块 2：赛博电子琴与节拍器 -->
+      <section id="tab-synth" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h2>🎹 赛博电子琴 &amp; 实时声波</h2>
+            <p class="hint">使用鼠标点击或键盘按键（A~K、W/E/T/Y/U）演奏，上方实时渲染音频波形。</p>
+          </div>
+          <div class="controls-row">
+            <label class="control-item">
+              音色波形
+              <select id="synth-wave">
+                <option value="sine">🌊 正弦波 (柔和)</option>
+                <option value="triangle">🔺 三角波 (温暖)</option>
+                <option value="square">🟦 方波 (复古8-bit)</option>
+                <option value="sawtooth">⚡ 锯齿波 (电子)</option>
+              </select>
+            </label>
+            <label class="control-item">
+              音量
+              <input type="range" id="synth-volume" min="0.05" max="0.6" step="0.05" value="0.25" />
+            </label>
+          </div>
+        </div>
+
+        <div class="synth-scope-wrap">
+          <canvas id="synth-scope"></canvas>
+        </div>
+
+        <div class="drum-pad-row">
+          <button class="drum-btn" data-drum="kick">🥁 底鼓 Kick (1)</button>
+          <button class="drum-btn" data-drum="snare">🪘 军鼓 Snare (2)</button>
+          <button class="drum-btn" data-drum="hihat">🔔 踩镲 Hi-Hat (3)</button>
+          <button class="drum-btn" data-drum="clap">👏 拍手 Clap (4)</button>
+        </div>
+
+        <div class="piano-wrap" id="piano-keyboard"></div>
+      </section>
+
+      <!-- 模块 3：AI 寻路算法可视化 -->
+      <section id="tab-pathfinding" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h2>🧠 寻路算法可视化实验室</h2>
+            <p class="hint">在网格中拖拽绘制障碍物，选择经典图搜索算法，观察它如何找到最短路径。</p>
+          </div>
+          <div class="controls-row">
+            <label class="control-item">
+              算法
+              <select id="pf-algo">
+                <option value="astar">⭐ A* 启发式搜索</option>
+                <option value="bfs">🌊 BFS 广度优先</option>
+                <option value="dijkstra">📏 Dijkstra 最短路径</option>
+              </select>
+            </label>
+            <label class="control-item">
+              画笔
+              <select id="pf-brush">
+                <option value="wall">🧱 绘制障碍</option>
+                <option value="start">🚩 设置起点</option>
+                <option value="end">🎯 设置终点</option>
+              </select>
+            </label>
+            <button id="btn-pf-maze" class="btn secondary">🎲 随机障碍</button>
+            <button id="btn-pf-clear" class="btn secondary">🧹 重置地图</button>
+            <button id="btn-pf-run" class="btn primary">▶ 开始寻路</button>
+          </div>
+        </div>
+
+        <div class="pf-stats">
+          <span>状态：<strong id="pf-status">就绪</strong></span>
+          <span>已探索节点：<strong id="pf-visited">0</strong></span>
+          <span>路径长度：<strong id="pf-length">0</strong></span>
+        </div>
+
+        <div class="pf-grid-wrap">
+          <div id="pf-grid" class="pf-grid"></div>
+        </div>
+      </section>
+
+      <!-- 模块 4：决策大转盘 -->
+      <section id="tab-wheel" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h2>🎡 灵感决策大转盘</h2>
+            <p class="hint">选择困难症救星！自定义选项或使用预设模板，点击开始旋转。</p>
+          </div>
+          <div class="controls-row">
+            <button class="btn secondary preset-btn" data-preset="food">🍜 今天吃什么</button>
+            <button class="btn secondary preset-btn" data-preset="study">💻 周末学什么</button>
+            <button class="btn secondary preset-btn" data-preset="relax">🎮 摸鱼干什么</button>
+          </div>
+        </div>
+
+        <div class="wheel-layout">
+          <div class="wheel-stage">
+            <div class="wheel-pointer">▼</div>
+            <canvas id="wheel-canvas" width="400" height="400"></canvas>
+            <button id="btn-spin" class="btn primary spin-btn">🚀 开始抽奖</button>
+            <div id="wheel-result" class="wheel-result">等待旋转...</div>
+          </div>
+
+          <div class="wheel-editor">
+            <h3>自定义选项（每行一个）</h3>
+            <textarea id="wheel-options" rows="10" placeholder="输入选项，每行一个..."></textarea>
+            <button id="btn-update-wheel" class="btn secondary">🔄 更新转盘</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
